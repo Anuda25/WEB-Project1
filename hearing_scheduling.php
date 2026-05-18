@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_hearing']) && !$
     if ($date <= $today || $day_of_week == 6 || $day_of_week == 7 || $time < "08:00" || $time > "17:00") {
         $error = "Invalid Date or Time inputs! Please follow the scheduling rules.";
     } else {
-        // Conflict detection: Same courtroom or Same judge at the same date/time
+        
         $conflict_query = "SELECT h.HearingID, c.CaseNumber FROM hearings h 
                            JOIN cases c ON h.CaseID = c.CaseID
                            WHERE h.HearingDate = ? AND h.HearingTime = ? \n   AND (h.CourtroomID = ? OR h.JudgeID = ?) AND h.Status != 'Cancelled'";
