@@ -2,7 +2,7 @@
 require_once 'config/db.php';
 require_once 'includes/auth.php';
 
-// Redirect if already logged in
+
 if (isLoggedIn()) {
     header("Location: dashboard.php");
     exit;
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = trim($_POST['phone']);
     $role = $_POST['role'];
     
-    // Validation
+ 
     if (empty($name) || empty($email) || empty($password)) {
         $error = "Please fill in all required fields.";
     } elseif ($password !== $confirm_password) {
@@ -29,20 +29,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "Invalid email format.";
     } else {
-        // Check if email already exists
+       
         $stmt = $pdo->prepare('SELECT UserID FROM users WHERE Email = ?');
         $stmt->execute([$email]);
         if ($stmt->fetch()) {
             $error = "Email already registered. Please login.";
         } else {
-            // Hash password and create user (default status: Inactive until Admin approves)
+          
             $hash = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $pdo->prepare('INSERT INTO users (Name, Email, Password, Role, Phone, Status) VALUES (?, ?, ?, ?, ?, ?)');
             
             if ($stmt->execute([$name, $email, $hash, $role, $phone, 'Inactive'])) {
                 $success = "Registration successful! Please wait for Admin approval before logging in.";
                 
-                // Notify all Admins about new registration
+              
                 $pdo->prepare("INSERT INTO notifications (UserID, Message) 
                               SELECT UserID, 'New user registration pending approval: $name ($role)' 
                               FROM users WHERE Role = 'Admin'")->execute();
@@ -61,29 +61,29 @@ require_once 'includes/header.php';
     .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); box-sizing: border-box; }
     h4 { text-align: center; color: #2c3e50; margin-top: 0; margin-bottom: 30px; font-weight: 600; font-size: 24px; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px; }
     
-    /* Input Fields & Forms Controls Elements */
+  
     .form-group { margin-bottom: 20px; text-align: left; }
     .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; font-size: 14px; }
     .form-control { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 14px; font-family: inherit; }
     .form-control:focus { border-color: #3498db; outline: none; }
     
-    /* Input Explanatory Subtext Notes */
+  
     .text-muted { display: block; margin-top: 5px; font-size: 12px; color: #7f8c8d; font-style: italic; }
     .text-danger { color: #e74c3c; font-weight: bold; }
     
-    /* Submit System Actions Elements */
+   
     .btn { padding: 12px 20px; cursor: pointer; border: none; border-radius: 4px; font-weight: 600; font-size: 15px; display: block; text-decoration: none; text-align: center; box-sizing: border-box; }
     .btn-add { background: #2ecc71; color: white; width: 100%; }
     .btn-add:hover { background: #27ae60; }
     .btn-load { background: #3498db; color: white; width: 100%; margin-top: 15px; }
     .btn-load:hover { background: #2980b9; }
     
-    /* Links Navigation Redirection Wrap */
+
     .link-wrapper { text-align: center; margin-top: 20px; }
     .link-wrapper a { color: #3498db; text-decoration: none; font-size: 14px; font-weight: 600; }
     .link-wrapper a:hover { text-decoration: underline; }
 
-    /* Alert Information Elements Styling Blocks */
+
     .alert { padding: 12px 20px; margin-bottom: 20px; border-radius: 4px; font-weight: 600; font-size: 14px; }
     .alert-danger { background-color: #fde8e8; color: #e74c3c; border-left: 4px solid #e74c3c; }
     .alert-success { background-color: #eafaf1; color: #2ecc71; border-left: 4px solid #2ecc71; }
