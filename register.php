@@ -59,30 +59,25 @@ require_once 'includes/header.php';
 <style>
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; padding: 40px 20px; color: #333; }
     .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); box-sizing: border-box; }
-    h4 { text-align: center; color: #2c3e50; margin-top: 0; margin-bottom: 30px; font-weight: 600; font-size: 24px; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px; }
-    
+    h4 { text-align: center; color: #2c3e50; margin-top: 0; margin-bottom: 30px; font-weight: 600; font-size: 24px; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px; }  
    
     .form-group { margin-bottom: 20px; text-align: left; }
     .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #555; font-size: 14px; }
     .form-control { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 14px; font-family: inherit; }
     .form-control:focus { border-color: #3498db; outline: none; }
     
-   
     .text-muted { display: block; margin-top: 5px; font-size: 12px; color: #7f8c8d; font-style: italic; }
     .text-danger { color: #e74c3c; font-weight: bold; }
-    
-   
+      
     .btn { padding: 12px 20px; cursor: pointer; border: none; border-radius: 4px; font-weight: 600; font-size: 15px; display: block; text-decoration: none; text-align: center; box-sizing: border-box; }
     .btn-add { background: #2ecc71; color: white; width: 100%; }
     .btn-add:hover { background: #27ae60; }
     .btn-load { background: #3498db; color: white; width: 100%; margin-top: 15px; }
     .btn-load:hover { background: #2980b9; }
-    
-  
+     
     .link-wrapper { text-align: center; margin-top: 20px; }
     .link-wrapper a { color: #3498db; text-decoration: none; font-size: 14px; font-weight: 600; }
     .link-wrapper a:hover { text-decoration: underline; }
-
   
     .alert { padding: 12px 20px; margin-bottom: 20px; border-radius: 4px; font-weight: 600; font-size: 14px; }
     .alert-danger { background-color: #fde8e8; color: #e74c3c; border-left: 4px solid #e74c3c; }
