@@ -32,7 +32,7 @@ if (isset($_POST['delete_doc']) && hasRole(['Admin', 'Clerk'])) {
     }
 }
 
-// Handle Status Update (Admin/Clerk only)
+//Update document status(Admin/Clerk)
 if (isset($_POST['update_status']) && hasRole(['Admin', 'Clerk'])) {
     $doc_id = $_POST['doc_id'];
     $status = $_POST['status'];
@@ -40,7 +40,7 @@ if (isset($_POST['update_status']) && hasRole(['Admin', 'Clerk'])) {
     $success = "Document status updated.";
 }
 
-// Handle Document Download
+//Document Download
 if (isset($_GET['download'])) {
     $doc_id = $_GET['download'];
     $stmt = $pdo->prepare('SELECT FileName, FilePath FROM documents WHERE DocumentID = ?');
@@ -65,7 +65,7 @@ if (isset($_GET['download'])) {
     }
 }
 
-// Handle Upload
+//Upload documents
 if (isset($_POST['upload_doc'])) {
     $case_id = $_POST['case_id'];
     $file = $_FILES['document'];
@@ -102,7 +102,7 @@ if (isset($_POST['upload_doc'])) {
     }
 }
 
-require_once 'includes/header.php';
+require_once 'includes/header.php';//Load the page header
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -242,4 +242,4 @@ require_once 'includes/header.php';
     </div>
 </div>
 
-<?php require_once 'includes/footer.php'; ?>
+<?php require_once 'includes/footer.php'; ?>//Load page footer
