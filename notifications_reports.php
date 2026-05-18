@@ -6,7 +6,6 @@ requireLogin();
 $user_id = $_SESSION['user_id'];
 $role = $_SESSION['role'];
 
-// Handle Mark as Read
 if (isset($_POST['mark_read'])) {
     $notif_id = $_POST['notif_id'];
     $pdo->prepare('UPDATE notifications SET Status = "Read" WHERE NotificationID = ? AND UserID = ?')->execute([$notif_id, $user_id]);
@@ -14,7 +13,6 @@ if (isset($_POST['mark_read'])) {
     exit;
 }
 
-// Export Cases CSV
 if (isset($_GET['export_cases'])) {
     $type = $_GET['case_type'] ?? '';
     $start = $_GET['start_date'] ?? '';
@@ -41,16 +39,25 @@ if (isset($_GET['export_cases'])) {
     $cases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=Cases_Report_' . date('Y-m-d') . '.csv');
+    header('Content-Disposition: attachment; filename=Case_Report_' . date('Ymd_His') . '.csv');
+    
     $output = fopen('php://output', 'w');
-    fputcsv($output, array('Case Number', 'Title', 'Type', 'Filing Date', 'Status'));
+    
+    fputcsv($output, array('COURT CASE MANAGEMENT SYSTEM - CASE REPORT'));
+    fputcsv($output, array('Generated on:', date('Y-m-d H:i:s')));
+    fputcsv($output, array('Filters:', ($type ?: 'All Types'), 'From: ' . ($start ?: 'Start'), 'To: ' . ($end ?: 'End')));
+    fputcsv($output, array());
+    
+    fputcsv($output, array('Case Number', 'Case Title', 'Category', 'Date Filed', 'Current Status'));
+    
     foreach ($cases as $row) {
+        $row['FilingDate'] = date('d-M-Y', strtotime($row['FilingDate']));
         fputcsv($output, $row);
     }
+    fclose($output);
     exit;
 }
 
-// Export Hearings CSV
 if (isset($_GET['export_hearings'])) {
     $start = $_GET['h_start_date'] ?? '';
     $end = $_GET['h_end_date'] ?? '';
@@ -72,30 +79,44 @@ if (isset($_GET['export_hearings'])) {
         $params[] = $end;
     }
 
+    $query .= " ORDER BY h.HearingDate ASC, h.HearingTime ASC"; 
     $stmt = $pdo->prepare($query);
     $stmt->execute($params);
     $hearings = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=Hearings_Schedule_' . date('Y-m-d') . '.csv');
+    header('Content-Disposition: attachment; filename=Hearing_Schedule_' . date('Ymd_His') . '.csv');
+    
     $output = fopen('php://output', 'w');
-    fputcsv($output, array('Date', 'Time', 'Case Number', 'Courtroom', 'Judge', 'Status'));
+    
+    fputcsv($output, array('OFFICIAL HEARING SCHEDULE'));
+    fputcsv($output, array('Export Date:', date('d-M-Y H:i')));
+    fputcsv($output, array());
+    
+    fputcsv($output, array('Scheduled Date', 'Scheduled Time', 'Case Reference', 'Courtroom/Location', 'Presiding Judge', 'Hearing Status'));
+    
     foreach ($hearings as $row) {
-        fputcsv($output, $row);
+        $formatted_row = [
+            date('D, d-M-Y', strtotime($row['HearingDate'])), 
+            date('h:i A', strtotime($row['HearingTime'])),   
+            $row['CaseNumber'],
+            $row['RoomNumber'] ?? 'N/A',
+            $row['JudgeName'] ?? 'Unassigned',
+            strtoupper($row['Status'])
+        ];
+        fputcsv($output, $formatted_row);
     }
+    fclose($output);
     exit;
 }
 
-// Fetch Notifications
 $stmt = $pdo->prepare('SELECT * FROM notifications WHERE UserID = ? ORDER BY Date DESC');
 $stmt->execute([$user_id]);
 $notifications = $stmt->fetchAll();
 
-// Auto-generate Hearing Reminders for Today/Tomorrow if none exist today
 $today = date('Y-m-d');
 $tomorrow = date('Y-m-d', strtotime('+1 day'));
 
-// Note: In a real system, a CRON job should handle this. For this app, we check/generate on page load for the logged-in user.
 $reminder_query = '';
 if ($role === 'Judge') {
     $reminder_query = "SELECT h.HearingID, h.HearingDate, h.HearingTime, c.CaseNumber FROM hearings h JOIN cases c ON h.CaseID = c.CaseID WHERE h.JudgeID = ? AND h.HearingDate IN (?, ?) AND h.Status = 'Scheduled'";
@@ -112,14 +133,12 @@ if ($reminder_query !== '') {
         $day = ($uh['HearingDate'] === $today) ? 'Today' : 'Tomorrow';
         $msg = "Reminder: Hearing for Case {$uh['CaseNumber']} is scheduled for $day at {$uh['HearingTime']}.";
         
-        // Check if notification already exists
         $check = $pdo->prepare('SELECT 1 FROM notifications WHERE UserID = ? AND Message = ? AND Date >= CURRENT_DATE');
         $check->execute([$user_id, $msg]);
         if (!$check->fetch()) {
             $pdo->prepare('INSERT INTO notifications (UserID, Message) VALUES (?,?)')->execute([$user_id, $msg]);
         }
     }
-    // Refresh notifications after inserting
     $stmt = $pdo->prepare('SELECT * FROM notifications WHERE UserID = ? ORDER BY Date DESC');
     $stmt->execute([$user_id]);
     $notifications = $stmt->fetchAll();
@@ -130,7 +149,6 @@ require_once 'includes/header.php';
 ?>
 
 <div class="row">
-    <!-- Notifications Column -->
     <div class="col-md-5 mb-4">
         <div class="card shadow-sm h-100">
             <div class="card-header bg-white py-3">
@@ -162,7 +180,6 @@ require_once 'includes/header.php';
         </div>
     </div>
 
-    <!-- Reports Column -->
     <div class="col-md-7 mb-4">
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white py-3">
