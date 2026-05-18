@@ -99,12 +99,10 @@ require_once 'includes/header.php';
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; color: #333; }
     h2, h3, h5 { color: #2c3e50; font-weight: 600; }
     
-    
     .form-control, .form-select { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; color: #333; }
     .form-control:focus, .form-select:focus { border-color: #3498db; box-shadow: none; outline: none; }
     .form-label { font-weight: bold ; color: #555; margin-bottom: 8px; }
     
-   
     .btn-primary { background: #2ecc71; border: none; padding: 10px 20px; border-radius: 4px; font-weight: 600; font-size: 14px; color: white; }
     .btn-primary:hover { background: #27ae60; }
     .btn-secondary { background: #3498db; border: none; padding: 10px 20px; border-radius: 4px; font-weight: 600; font-size: 14px; color: white; }
@@ -112,19 +110,16 @@ require_once 'includes/header.php';
     .btn-outline-primary { border: 1px solid #3498db; color: #3498db; background: transparent; }
     .btn-outline-primary:hover { background: #3498db; color: white; }
     
-    
     .btn-danger, .btn-outline-danger { background: #e74c3c; border: none; color: white; padding: 5px 10px; font-size: 12px; border-radius: 3px; }
     .btn-danger:hover, .btn-outline-danger:hover { background: #c0392b; color: white; }
     .btn-success { background: #2ecc71; border: none; color: white; padding: 5px 10px; font-size: 12px; border-radius: 3px; }
     .btn-success:hover { background: #27ae60 ; }
 
-   
     table { border-collapse: collapse ; background: white; }
     th { background-color: #2c3e50; color: white; font-weight: 600; border: none; }
     td { border-bottom: 1px solid #e0e0e0; color: #333; }
     tr:hover { background-color: #f9f9f9; }
     
-   
     .badge { padding: 0.25em 0.4em; font-size: 75%; font-weight: 700; line-height: 1; text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: 10px; }
     .bg-success { background-color: #2ecc71; color: white; }
     .bg-warning { background-color: #f1c40f; color: #2c3e50; }
